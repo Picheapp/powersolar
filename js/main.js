@@ -7,11 +7,11 @@ const CONFIG = {
   // Número de WhatsApp (solo dígitos, con 1 de EE. UU./PR).
   whatsapp: "17875252996",
 
-  // Para recibir los formularios por email, crea un formulario gratis en
-  // https://formspree.io, copia tu enlace (ej. "https://formspree.io/f/abcdwxyz")
-  // y pégalo aquí. Si lo dejas vacío, el formulario envía los datos
-  // directo al WhatsApp de Edwin.
-  formEndpoint: "",
+  // Email que recibe cada cliente CON la foto de su factura (gratis, vía FormSubmit.co).
+  // Ej. "edwin@correo.com". La primera vez llega un email de FormSubmit para
+  // activar: hay que darle "Activate". Si lo dejas vacío, el formulario envía
+  // los datos al WhatsApp de Edwin (la factura se adjunta en el chat).
+  leadEmail: "",
 
   // Fecha y hora en que termina la promoción (hora de Puerto Rico).
   promoEnds: "2026-11-30T23:59:59-04:00",
@@ -111,10 +111,47 @@ const PUEBLOS = ["Adjuntas","Aguada","Aguadilla","Aguas Buenas","Aibonito","Aña
     e.target.value = d.length > 6 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : d.length > 3 ? `(${d.slice(0, 3)}) ${d.slice(3)}` : d;
   });
 
-  form.addEventListener("submit", async (e) => {
+  /* ----- Subir factura ----- */
+  const fileIn = $(".js-file", form);
+  fileIn.addEventListener("change", () => {
+    const f = fileIn.files[0];
+    const box = fileIn.closest(".upload__box");
+    if (f && f.size > 10 * 1024 * 1024) {
+      fileIn.value = ""; box.classList.remove("has-file");
+      $(".js-file-text", form).textContent = "El archivo es muy grande (máx. 10 MB)";
+      return;
+    }
+    box.classList.toggle("has-file", !!f);
+    $(".js-file-text", form).textContent = f ? `✓ ${f.name}` : "Toca para subir una foto o PDF";
+  });
+
+  /* ----- Aviso si escoge solo placas ----- */
+  form.addEventListener("change", (e) => {
+    if (e.target.name === "interes") $(".js-hint-placas", form).hidden = e.target.value !== "Solo placas solares";
+  });
+
+  /* ----- Pantalla de éxito ----- */
+  function showDone(name, waUrl, msgHtml) {
+    steps.forEach((s) => s.classList.remove("is-active"));
+    $(".steps", form).hidden = true;
+    $(".lead-form__head", form).hidden = true;
+    $(".js-done-name", form).textContent = name || "gracias";
+    if (waUrl) $(".js-wa-done", form).href = waUrl;
+    if (msgHtml) $(".js-done-msg", form).innerHTML = msgHtml;
+    $(".lead-form__done", form).hidden = false;
+  }
+  // Regreso desde FormSubmit (?gracias=1)
+  if (params.get("gracias")) {
+    let name = ""; try { name = sessionStorage.getItem("ps_name") || ""; } catch (_) {}
+    showDone(name, null, "Recibimos tu información y tu factura. Edwin te contactará pronto. Si quieres adelantar, escríbele ahora:");
+    track("Lead");
+    setTimeout(() => $("#formulario").scrollIntoView({ block: "center" }), 300);
+  }
+
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
     const err = $(".js-err-2", form);
-    if (form._gotcha.value) return; // spam
+    if (form._honey.value) return; // spam
     const bad = [];
     if (form.nombre.value.trim().length < 2) bad.push(form.nombre);
     if (form.telefono.value.replace(/\D/g, "").length !== 10) bad.push(form.telefono);
@@ -128,50 +165,47 @@ const PUEBLOS = ["Adjuntas","Aguada","Aguadilla","Aguas Buenas","Aibonito","Aña
     }
     err.textContent = "";
 
+    const hasFile = !!(fileIn.files && fileIn.files[0]);
     const data = {
       nombre: form.nombre.value.trim(),
       telefono: form.telefono.value,
       pueblo: form.pueblo.value,
-      dueno_de_casa: form.dueno.value,
-      factura_luz: form.factura.value,
+      dueno: form.dueno.value,
+      factura: form.factura.value,
       interes: form.interes.value,
-      consentimiento: "Sí",
-      campaña: campaign || "directo",
-      pagina: location.href,
-      fecha: new Date().toLocaleString("es-PR", { timeZone: "America/Puerto_Rico" }),
     };
     const msg =
-      `Hola Edwin, quiero la promoción de la mitad del pago.\n` +
+      `Hola Edwin, quiero orientación de Power Solar.\n` +
       `• Nombre: ${data.nombre}\n• Teléfono: ${data.telefono}\n• Pueblo: ${data.pueblo}\n` +
-      `• Dueño(a) de casa: ${data.dueno_de_casa}\n• Factura de luz: ${data.factura_luz}\n• Interés: ${data.interes}`;
+      `• Dueño(a) de casa: ${data.dueno}\n• Factura de luz: ${data.factura}\n• Interés: ${data.interes}` +
+      (hasFile ? `\n• Te envío la foto de mi factura aquí.` : "");
     const waUrl = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
-
     const btn = $(".js-submit", form);
     btn.disabled = true; btn.textContent = "Enviando…";
-
-    let sent = false;
-    if (CONFIG.formEndpoint) {
-      try {
-        const r = await fetch(CONFIG.formEndpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({ ...data, _subject: `Nuevo cliente: ${data.nombre} (${data.pueblo})` }),
-        });
-        sent = r.ok;
-      } catch (_) { sent = false; }
-    }
-    if (!sent) {
-      // Sin servicio de email configurado (o si falla): enviar por WhatsApp
-      window.open(waUrl, "_blank", "noopener");
-    }
-
     track("Lead");
-    steps.forEach((s) => s.classList.remove("is-active"));
-    $(".steps", form).hidden = true;
-    $(".lead-form__head", form).hidden = true;
-    $(".js-done-name", form).textContent = data.nombre.split(" ")[0];
-    $(".js-wa-done", form).href = waUrl;
-    $(".lead-form__done", form).hidden = false;
+
+    if (CONFIG.leadEmail) {
+      // Envío por email con la factura adjunta (FormSubmit.co)
+      try { sessionStorage.setItem("ps_name", data.nombre.split(" ")[0]); } catch (_) {}
+      const add = (n, v) => { const i = document.createElement("input"); i.type = "hidden"; i.name = n; i.value = v; form.appendChild(i); };
+      add("_subject", `Nuevo cliente Power Solar: ${data.nombre} (${data.pueblo})`);
+      add("_template", "table");
+      add("_captcha", "false");
+      add("_next", `${location.origin}${location.pathname}?gracias=1#formulario`);
+      add("campaña", campaign || "directo");
+      add("fecha", new Date().toLocaleString("es-PR", { timeZone: "America/Puerto_Rico" }));
+      form.action = `https://formsubmit.co/${CONFIG.leadEmail}`;
+      form.method = "POST";
+      form.enctype = "multipart/form-data";
+      HTMLFormElement.prototype.submit.call(form);
+      return;
+    }
+
+    // Sin email configurado: enviar por WhatsApp
+    window.open(waUrl, "_blank", "noopener");
+    showDone(data.nombre.split(" ")[0], waUrl, hasFile
+      ? "Se abrió WhatsApp con tus datos. <b>Adjunta la foto de tu factura en el chat</b> y envíale el mensaje a Edwin. Si no se abrió, toca aquí:"
+      : null);
   });
 
   /* ----- Medición (Meta Pixel / Google) si los instalas ----- */

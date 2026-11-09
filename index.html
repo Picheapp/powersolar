@@ -107,8 +107,10 @@
               <p class="field__q">¿Qué te interesa?</p>
               <div class="chips" role="radiogroup">
                 <label class="chip"><input type="radio" name="interes" value="Placas solares + batería" required><span>Placas + batería</span></label>
+                <label class="chip"><input type="radio" name="interes" value="Solo placas solares"><span>Solo placas</span></label>
                 <label class="chip"><input type="radio" name="interes" value="Quiero que me orienten"><span>Quiero orientación</span></label>
               </div>
+              <p class="lead-form__hint js-hint-placas" hidden>La promoción de la mitad del pago aplica a sistemas con batería. Con placas solas igual te orientamos y te damos tu precio.</p>
               <p class="lead-form__error js-err-1" role="alert"></p>
               <button type="button" class="btn btn--orange btn--block js-next">Continuar <span aria-hidden="true">→</span></button>
             </fieldset>
@@ -129,12 +131,21 @@
                   <option value="">Selecciona tu pueblo</option>
                 </select>
               </label>
+              <div class="field upload">
+                <span>Sube tu factura de luz <em>(opcional)</em></span>
+                <label class="upload__box">
+                  <input type="file" name="foto_factura" accept="image/*,application/pdf" class="js-file">
+                  <span class="upload__icon" aria-hidden="true">📄</span>
+                  <span class="upload__text js-file-text">Toca para subir una foto o PDF</span>
+                </label>
+                <small class="upload__help">Con tu factura, Edwin calcula el sistema exacto para tu casa.</small>
+              </div>
               <label class="consent">
                 <input type="checkbox" name="consentimiento" value="Sí" required>
                 <span>Acepto que Power Solar me contacte por llamada, mensaje o WhatsApp sobre esta oferta. Ver <a href="privacidad.html" target="_blank" rel="noopener">privacidad</a>.</span>
               </label>
               <!-- trampa anti-spam: no la llenan las personas -->
-              <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
               <p class="lead-form__error js-err-2" role="alert"></p>
               <button type="submit" class="btn btn--orange btn--block btn--lg js-submit">Quiero mi orientación</button>
               <button type="button" class="lead-form__back js-back">← Volver</button>
@@ -143,7 +154,7 @@
             <div class="lead-form__done" hidden>
               <div class="done__icon" aria-hidden="true">✓</div>
               <h3>¡Listo, <span class="js-done-name"></span>!</h3>
-              <p>Recibimos tu información. Edwin te contactará pronto. Si quieres adelantar, escríbele ahora:</p>
+              <p class="js-done-msg">Recibimos tu información. Edwin te contactará pronto. Si quieres adelantar, escríbele ahora:</p>
               <a class="btn btn--whatsapp btn--block js-wa-done" href="https://wa.me/17875252996" target="_blank" rel="noopener">Escribir por WhatsApp</a>
             </div>
             <p class="lead-form__legal">*Aplica a contrato de sistemas solares con batería. Válido del 1 al 30 de noviembre de 2026. Ciertas restricciones aplican. No se puede combinar con otras ofertas.</p>
@@ -230,6 +241,7 @@
         <div class="section-head reveal">
           <p class="eyebrow">Equipos de alto rendimiento</p>
           <h2>Placas de 610 W + <span class="hl">Tesla Powerwall 3</span></h2>
+          <p class="section-sub">Escoge solo placas solares o el sistema completo con batería.</p>
         </div>
         <div class="gear__grid">
           <article class="gear__card reveal">
@@ -275,7 +287,7 @@
         </div>
         <ol class="how__steps">
           <li class="reveal"><span class="how__n">1</span><h3>Déjanos tus datos</h3><p>Llena el formulario o escríbenos por WhatsApp.</p></li>
-          <li class="reveal"><span class="how__n">2</span><h3>Recibe tu orientación</h3><p>Edwin revisa tu consumo y te explica el sistema ideal para tu casa.</p></li>
+          <li class="reveal"><span class="how__n">2</span><h3>Recibe tu orientación</h3><p>Edwin revisa tu factura de luz y te explica el sistema ideal para tu casa.</p></li>
           <li class="reveal"><span class="how__n">3</span><h3>Instalación</h3><p>Instalamos tus placas y tu batería Tesla Powerwall 3.</p></li>
           <li class="reveal"><span class="how__n">4</span><h3>Paga la mitad</h3><p>Disfruta 6 meses pagando la mitad de tu mensualidad.*</p></li>
         </ol>
@@ -319,6 +331,10 @@
         <details class="reveal">
           <summary>¿Quién cualifica?</summary>
           <p>Aplica a contratos de sistemas solares con batería firmados del 1 al 30 de noviembre de 2026. Ciertas restricciones aplican y no se puede combinar con otras ofertas. Edwin te confirma si cualificas.</p>
+        </details>
+        <details class="reveal">
+          <summary>¿Puedo instalar solo placas solares?</summary>
+          <p>Sí. Puedes escoger solo placas solares o placas con batería Tesla Powerwall 3. La promoción de la mitad del pago aplica a los sistemas con batería.</p>
         </details>
         <details class="reveal">
           <summary>¿El precio del kilovatio sube?</summary>

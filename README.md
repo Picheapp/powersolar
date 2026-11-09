@@ -22,17 +22,20 @@ Abre `js/main.js`. Arriba verás:
 ```js
 const CONFIG = {
   whatsapp: "17875252996",
-  formEndpoint: "",
+  leadEmail: "",
   promoEnds: "2026-11-30T23:59:59-04:00",
 };
 ```
 
-- **Sin configurar nada:** cuando alguien llena el formulario, se abre WhatsApp
-  con todos sus datos listos para enviarle a Edwin.
-- **Para recibir cada cliente por email también:** crea una cuenta gratis en
-  https://formspree.io → *New form* → copia el enlace (`https://formspree.io/f/xxxxxxx`)
-  y pégalo en `formEndpoint`. Formspree te envía cada formulario al email y
-  puedes exportarlos a Excel.
+El formulario pregunta si es dueño de la casa, cuánto paga de luz, qué le interesa
+(**placas + batería**, **solo placas** u orientación) y deja **subir la foto o PDF de la factura de luz**.
+
+- **Sin configurar nada:** al enviar, se abre WhatsApp con todos los datos listos para Edwin.
+  Si el cliente subió su factura, la página le pide adjuntarla en el chat.
+- **Para recibir cada cliente por email con la factura adjunta (gratis):** escribe el email en
+  `leadEmail` (ej. `"edwin@correo.com"`), sube el cambio y llena el formulario una vez de prueba.
+  Llegará un email de **FormSubmit** para activar: toca **Activate Form**. Desde ahí, cada cliente
+  llega al email con sus respuestas y la factura adjunta (máximo 10 MB).
 
 ## 2. Subir a GitHub y publicar gratis (GitHub Pages)
 
