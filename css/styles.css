@@ -296,10 +296,10 @@ input[type=range]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 
 .bill { padding: 5rem 0; background: var(--bg); }
 .bill__grid { display: grid; gap: 2.4rem; align-items: center; }
 .bill__copy > p { color: var(--muted); font-size: 1.05rem; }
-.bill__imgs img { width: 100%; max-width: 380px; border-radius: 16px; box-shadow: var(--shadow); transform: rotate(-2deg); border: 1px solid var(--line); }
+.bill__imgs img { width: 100%; height: auto; max-width: 380px; border-radius: 16px; box-shadow: var(--shadow); transform: rotate(-2deg); border: 1px solid var(--line); }
 .footnote--left { text-align: left; margin-top: 1rem; }
 .bill__ad { max-width: 420px; margin: 0 auto; display: grid; gap: 1rem; }
-.bill__ad img { width: 100%; border-radius: 24px; box-shadow: 0 40px 80px -30px rgba(11,20,48,.6); }
+.bill__ad img { width: 100%; height: auto; border-radius: 24px; box-shadow: 0 40px 80px -30px rgba(11,20,48,.6); }
 @media (min-width: 960px) { .bill__grid { grid-template-columns: 1.1fr .9fr; gap: 4rem; } }
 
 /* ===== Checklist ===== */
