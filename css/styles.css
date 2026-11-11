@@ -284,3 +284,31 @@ input[type=range]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 
   .countdown__boxes div { min-width: 0; flex: 1; }
   .header__logo img { height: 44px; }
 }
+
+/* ===== Videos (dos) ===== */
+.videos { display: grid; gap: 1.6rem; grid-template-columns: 1fr; max-width: 780px; margin: 0 auto 2rem; }
+.video-card { margin: 0; text-align: center; }
+.video-card figcaption { margin-top: .9rem; font-weight: 800; color: var(--ink); }
+.video-sec__ctas--center { justify-content: center; }
+@media (min-width: 700px) { .videos { grid-template-columns: 1fr 1fr; } }
+
+/* ===== Factura bajo control ===== */
+.bill { padding: 5rem 0; background: var(--bg); }
+.bill__grid { display: grid; gap: 2.4rem; align-items: center; }
+.bill__copy > p { color: var(--muted); font-size: 1.05rem; }
+.bill__imgs img { width: 100%; max-width: 380px; border-radius: 16px; box-shadow: var(--shadow); transform: rotate(-2deg); border: 1px solid var(--line); }
+.footnote--left { text-align: left; margin-top: 1rem; }
+.bill__ad { max-width: 420px; margin: 0 auto; display: grid; gap: 1rem; }
+.bill__ad img { width: 100%; border-radius: 24px; box-shadow: 0 40px 80px -30px rgba(11,20,48,.6); }
+@media (min-width: 960px) { .bill__grid { grid-template-columns: 1.1fr .9fr; gap: 4rem; } }
+
+/* ===== Checklist ===== */
+.checklist { padding: 4.5rem 0; background: var(--blue); color: #fff; }
+.checklist__inner { display: grid; gap: 2rem; align-items: center; }
+.checklist h2 { margin: 0; }
+.checklist .yl { color: #FFC72C; }
+.checklist__list { list-style: none; padding: 0; margin: 0; display: grid; gap: .9rem; }
+.checklist__list li { display: flex; align-items: center; gap: 1rem; font-size: 1.15rem; font-weight: 800; }
+.checklist__list li em { font-style: normal; font-weight: 600; color: #C9D4FF; font-size: .95rem; margin-left: .3rem; }
+.checklist__list span { flex: 0 0 44px; height: 44px; border-radius: 12px; background: var(--orange); color: var(--navy); display: grid; place-items: center; font-size: 1.2rem; }
+@media (min-width: 960px) { .checklist__inner { grid-template-columns: 1fr 1fr; gap: 4rem; } }
