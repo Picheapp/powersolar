@@ -160,10 +160,9 @@ const PUEBLOS = ["Adjuntas","Aguada","Aguadilla","Aguas Buenas","Aibonito","Aña
     setTimeout(() => $("#formulario").scrollIntoView({ block: "center" }), 300);
   }
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const err = $(".js-err-2", form);
-    if (form._honey.value) return; // spam
     const bad = [];
     if (form.nombre.value.trim().length < 2) bad.push(form.nombre);
     if (form.telefono.value.replace(/\D/g, "").length !== 10) bad.push(form.telefono);
@@ -197,19 +196,30 @@ const PUEBLOS = ["Adjuntas","Aguada","Aguadilla","Aguas Buenas","Aibonito","Aña
     track("Lead");
 
     if (CONFIG.leadEmail) {
-      // Envío por email con la factura adjunta (FormSubmit.co)
-      try { sessionStorage.setItem("ps_name", data.nombre.split(" ")[0]); sessionStorage.setItem("ps_wa", waUrl); } catch (_) {}
-      const add = (n, v) => { const i = document.createElement("input"); i.type = "hidden"; i.name = n; i.value = v; form.appendChild(i); };
-      add("_subject", `Nuevo cliente Power Solar: ${data.nombre} (${data.pueblo})`);
-      add("_template", "table");
-      add("_captcha", "false");
-      add("_next", `${location.origin}${location.pathname}?gracias=1#formulario`);
-      add("campaña", campaign || "directo");
-      add("fecha", new Date().toLocaleString("es-PR", { timeZone: "America/Puerto_Rico" }));
-      form.action = `https://formsubmit.co/${CONFIG.leadEmail}`;
-      form.method = "POST";
-      form.enctype = "multipart/form-data";
-      HTMLFormElement.prototype.submit.call(form);
+      // Envío por email sin salir de la página (FormSubmit AJAX), con la factura si la subieron
+      const fd = new FormData(form);
+      fd.append("_subject", `Nuevo cliente Power Solar: ${data.nombre} (${data.pueblo})`);
+      fd.append("_template", "table");
+      fd.append("_captcha", "false");
+      fd.append("campaña", campaign || "directo");
+      fd.append("fecha", new Date().toLocaleString("es-PR", { timeZone: "America/Puerto_Rico" }));
+      let ok = false, info = "";
+      try {
+        const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 15000);
+        const r = await fetch(`https://formsubmit.co/ajax/${CONFIG.leadEmail}`, {
+          method: "POST", body: fd, headers: { Accept: "application/json" }, signal: ctrl.signal,
+        });
+        clearTimeout(t);
+        const j = await r.json().catch(() => ({}));
+        ok = r.ok && String(j.success) === "true";
+        info = j.message || "";
+        if (!ok) console.warn("FormSubmit:", r.status, j);
+      } catch (err) { console.warn("FormSubmit error:", err); }
+      const needsActivation = /activat/i.test(info);
+      showDone(data.nombre.split(" ")[0], waUrl, ok
+        ? "Recibimos tu información. Revisa el mensaje y <b>envíaselo a Edwin por WhatsApp</b> para atenderte más rápido:"
+        : "Para terminar, <b>envíale tus datos a Edwin por WhatsApp</b>. Revisa el mensaje y toca enviar:" +
+          (needsActivation ? "<br><small style='color:#B42318'>(Aviso para el dueño: el email del formulario aún no está activado. Revisa el correo de FormSubmit y toca “Activate Form”.)</small>" : ""));
       return;
     }
 
