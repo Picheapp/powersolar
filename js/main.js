@@ -130,6 +130,13 @@ const PUEBLOS = ["Adjuntas","Aguada","Aguadilla","Aguas Buenas","Aibonito","Aña
     if (e.target.name === "interes") $(".js-hint-placas", form).hidden = e.target.value !== "Solo placas solares";
   });
 
+  /* ----- Vista previa editable del mensaje de WhatsApp ----- */
+  const waMsg = $(".js-wa-msg", form);
+  if (waMsg) {
+    const syncWa = () => { $(".js-wa-done", form).href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(waMsg.value)}`; };
+    waMsg.addEventListener("input", syncWa);
+  }
+
   /* ----- Pantalla de éxito ----- */
   function showDone(name, waUrl, msgHtml) {
     steps.forEach((s) => s.classList.remove("is-active"));
@@ -137,13 +144,18 @@ const PUEBLOS = ["Adjuntas","Aguada","Aguadilla","Aguas Buenas","Aibonito","Aña
     $(".lead-form__head", form).hidden = true;
     $(".js-done-name", form).textContent = name || "gracias";
     if (waUrl) $(".js-wa-done", form).href = waUrl;
+    const m = waUrl && (waUrl.split("?text=")[1] || "");
+    if (m) {
+      $(".js-wa-msg", form).value = decodeURIComponent(m);
+      $(".js-wa-preview", form).hidden = false;
+    }
     if (msgHtml) $(".js-done-msg", form).innerHTML = msgHtml;
     $(".lead-form__done", form).hidden = false;
   }
   // Regreso desde FormSubmit (?gracias=1)
   if (params.get("gracias")) {
     let name = "", wa = null; try { name = sessionStorage.getItem("ps_name") || ""; wa = sessionStorage.getItem("ps_wa"); } catch (_) {}
-    showDone(name, wa, "Recibimos tu información. Edwin te contactará pronto. <b>Envíale también tus datos por WhatsApp</b> para atenderte más rápido:");
+    showDone(name, wa, "Recibimos tu información. Edwin te contactará pronto. Revisa el mensaje y <b>envíaselo por WhatsApp</b> para atenderte más rápido:");
     track("Lead");
     setTimeout(() => $("#formulario").scrollIntoView({ block: "center" }), 300);
   }

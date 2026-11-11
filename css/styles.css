@@ -312,3 +312,13 @@ input[type=range]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 
 .checklist__list li em { font-style: normal; font-weight: 600; color: #C9D4FF; font-size: .95rem; margin-left: .3rem; }
 .checklist__list span { flex: 0 0 44px; height: 44px; border-radius: 12px; background: var(--orange); color: var(--navy); display: grid; place-items: center; font-size: 1.2rem; }
 @media (min-width: 960px) { .checklist__inner { grid-template-columns: 1fr 1fr; gap: 4rem; } }
+
+/* ===== Vista previa WhatsApp ===== */
+.wa-preview { text-align: left; margin: 0 0 1rem; }
+.wa-preview__label { display: block; font-weight: 800; font-size: .88rem; margin-bottom: .45rem; }
+.wa-preview__label span { color: var(--muted); font-weight: 600; }
+.wa-preview__bubble { background: #E7F8EE; border: 1px solid #BFE9CF; border-radius: 16px 16px 4px 16px; padding: .6rem; }
+.wa-preview__bubble textarea { width: 100%; box-sizing: border-box; border: 0; background: transparent; resize: vertical; font: 500 .92rem/1.45 var(--font); color: #0F2A1A; outline: none; min-height: 170px; }
+.wa-preview__bubble:focus-within { border-color: var(--wa); box-shadow: 0 0 0 3px rgba(37,211,102,.2); }
+
+[hidden] { display: none !important; }

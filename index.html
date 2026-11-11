@@ -150,7 +150,13 @@
               <div class="done__icon" aria-hidden="true">✓</div>
               <h3>¡Listo, <span class="js-done-name"></span>!</h3>
               <p class="js-done-msg">Recibimos tu información. Edwin te contactará pronto. Si quieres adelantar, escríbele ahora:</p>
-              <a class="btn btn--whatsapp btn--block js-wa-done" href="https://wa.me/17875252996" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+              <div class="wa-preview js-wa-preview" hidden>
+                <label for="wa-msg" class="wa-preview__label">Vista previa del mensaje <span>(puedes editarlo)</span></label>
+                <div class="wa-preview__bubble">
+                  <textarea id="wa-msg" class="js-wa-msg" rows="8"></textarea>
+                </div>
+              </div>
+              <a class="btn btn--whatsapp btn--block js-wa-done" href="https://wa.me/17875252996" target="_blank" rel="noopener">Enviar por WhatsApp</a>
             </div>
             <p class="lead-form__legal">*Aplica a contrato de sistemas solares con batería. Válido del 1 al 30 de noviembre de 2026. Ciertas restricciones aplican. No se puede combinar con otras ofertas.</p>
           </form>
