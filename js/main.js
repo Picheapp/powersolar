@@ -11,7 +11,7 @@ const CONFIG = {
   // Ej. "edwin@correo.com". La primera vez llega un email de FormSubmit para
   // activar: hay que darle "Activate". Si lo dejas vacío, el formulario envía
   // los datos al WhatsApp de Edwin (la factura se adjunta en el chat).
-  leadEmail: "",
+  leadEmail: "emartell.powersolar1@outlook.com",
 
   // Fecha y hora en que termina la promoción (hora de Puerto Rico).
   promoEnds: "2026-11-30T23:59:59-04:00",
@@ -142,8 +142,8 @@ const PUEBLOS = ["Adjuntas","Aguada","Aguadilla","Aguas Buenas","Aibonito","Aña
   }
   // Regreso desde FormSubmit (?gracias=1)
   if (params.get("gracias")) {
-    let name = ""; try { name = sessionStorage.getItem("ps_name") || ""; } catch (_) {}
-    showDone(name, null, "Recibimos tu información y tu factura. Edwin te contactará pronto. Si quieres adelantar, escríbele ahora:");
+    let name = "", wa = null; try { name = sessionStorage.getItem("ps_name") || ""; wa = sessionStorage.getItem("ps_wa"); } catch (_) {}
+    showDone(name, wa, "Recibimos tu información. Edwin te contactará pronto. <b>Envíale también tus datos por WhatsApp</b> para atenderte más rápido:");
     track("Lead");
     setTimeout(() => $("#formulario").scrollIntoView({ block: "center" }), 300);
   }
@@ -186,7 +186,7 @@ const PUEBLOS = ["Adjuntas","Aguada","Aguadilla","Aguas Buenas","Aibonito","Aña
 
     if (CONFIG.leadEmail) {
       // Envío por email con la factura adjunta (FormSubmit.co)
-      try { sessionStorage.setItem("ps_name", data.nombre.split(" ")[0]); } catch (_) {}
+      try { sessionStorage.setItem("ps_name", data.nombre.split(" ")[0]); sessionStorage.setItem("ps_wa", waUrl); } catch (_) {}
       const add = (n, v) => { const i = document.createElement("input"); i.type = "hidden"; i.name = n; i.value = v; form.appendChild(i); };
       add("_subject", `Nuevo cliente Power Solar: ${data.nombre} (${data.pueblo})`);
       add("_template", "table");
