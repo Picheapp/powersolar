@@ -322,3 +322,18 @@ input[type=range]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 
 .wa-preview__bubble:focus-within { border-color: var(--wa); box-shadow: 0 0 0 3px rgba(37,211,102,.2); }
 
 [hidden] { display: none !important; }
+
+/* ===== Celular: el formulario se ve de inmediato ===== */
+@media (max-width: 959px) {
+  .hero { padding: 1.1rem 0 2rem; }
+  .hero__grid { gap: 1rem; }
+  .hero .eyebrow { margin-bottom: .4rem; font-size: .72rem; }
+  .hero__title { font-size: clamp(2rem, 9vw, 2.6rem); margin-bottom: .3rem; }
+  .hero__lead, .hero .countdown { display: none; }
+  .lead-form { padding: 1.2rem; }
+  .lead-form__head h2 { font-size: 1.3rem; }
+  .lead-form__sub { margin-bottom: .7rem; }
+  .header__inner { height: 60px; }
+  .header__logo img { height: 40px; }
+  .topbar { padding: .4rem 1rem; font-size: .8rem; }
+}
