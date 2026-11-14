@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Power Solar Admin</title>
+  <meta name="theme-color" content="#0B1430">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <!-- ===== Entrada ===== -->
+  <section class="login js-login">
+    <div class="login__card">
+      <img src="img/logo.png" alt="Power Solar" width="96" height="46">
+      <h1>Panel administrativo</h1>
+      <p>Clientes (CRM), embudo de ventas y estadísticas de la página.</p>
+      <form class="js-login-form">
+        <label class="f">Clave de administrador
+          <input class="input" type="password" name="key" autocomplete="current-password" required>
+        </label>
+        <label class="check"><input type="checkbox" name="remember" checked> Recordar en este dispositivo</label>
+        <button class="btn btn--primary" type="submit">Entrar</button>
+        <div class="login__err js-login-err" role="alert"></div>
+      </form>
+      <div class="login__note js-local-note" hidden>
+        <b>Modo prueba:</b> todavía no hay base de datos conectada (<code>js/config.js</code>).
+        Verás solo las visitas y clientes de este navegador. Escribe cualquier clave para entrar
+        y sigue el README → “Panel admin” para conectar Google Sheets gratis.
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== App ===== -->
+  <div class="app js-app" hidden>
+    <aside class="side">
+      <a class="side__logo" href="index.html"><img src="img/logo-blanco.png" alt="" width="70" height="34"> Admin</a>
+      <nav class="side__nav" aria-label="Panel">
+        <button data-view="resumen" class="is-on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/></svg>Resumen</button>
+        <button data-view="kanban"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="4" height="8" rx="1"/></svg>Ventas <span class="badge js-badge-new" hidden>0</span></button>
+        <button data-view="lista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Clientes</button>
+        <button data-view="stats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></svg>Estadísticas</button>
+        <button data-view="ajustes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Ajustes</button>
+      </nav>
+      <div class="side__foot">
+        <span class="js-updated">—</span>
+        <button class="js-logout" type="button">Salir</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h2 class="js-title">Resumen</h2>
+        <span class="mode-pill js-mode">En vivo</span>
+        <div class="seg js-range" role="group" aria-label="Periodo">
+          <button data-days="1">Hoy</button>
+          <button data-days="7">7 días</button>
+          <button data-days="30" class="is-on">30 días</button>
+          <button data-days="90">90 días</button>
+        </div>
+        <button class="btn js-refresh" type="button" title="Actualizar">↻ Actualizar</button>
+      </div>
+
+      <!-- Resumen -->
+      <section class="view is-on" data-view="resumen">
+        <div class="grid grid--kpi js-kpis"></div>
+        <div class="grid grid--2">
+          <div class="card"><h3>Visitas por día</h3><p class="sub">Páginas vistas</p><div class="js-ch-visits"></div></div>
+          <div class="card"><h3>Clientes nuevos por día</h3><p class="sub">Formularios recibidos y añadidos</p><div class="js-ch-leads"></div></div>
+          <div class="card"><h3>Seguimientos pendientes</h3><p class="sub">Vencidos y para hoy</p><div class="js-followups"></div></div>
+          <div class="card"><h3>Embudo de ventas</h3><p class="sub">Clientes por etapa (todos)</p><div class="js-pipeline"></div></div>
+        </div>
+      </section>
+
+      <!-- Kanban -->
+      <section class="view" data-view="kanban">
+        <div class="kb-tools">
+          <input class="input js-search" type="search" placeholder="Buscar nombre, teléfono, pueblo…">
+          <select class="select js-filter-int" style="max-width:220px">
+            <option value="">Todo interés</option>
+            <option>Placas solares + batería</option>
+            <option>Solo placas solares</option>
+            <option>Quiero que me orienten</option>
+          </select>
+          <button class="btn btn--primary js-add" type="button">+ Nuevo cliente</button>
+        </div>
+        <div class="kanban js-kanban"></div>
+      </section>
+
+      <!-- Lista -->
+      <section class="view" data-view="lista">
+        <div class="kb-tools">
+          <input class="input js-search2" type="search" placeholder="Buscar…">
+          <button class="btn btn--primary js-add" type="button">+ Nuevo cliente</button>
+          <button class="btn js-export" type="button">⬇ Exportar CSV</button>
+        </div>
+        <div class="table-wrap"><table class="t js-table"></table></div>
+      </section>
+
+      <!-- Estadísticas -->
+      <section class="view" data-view="stats">
+        <div class="grid grid--kpi js-kpis2"></div>
+        <div class="grid grid--2">
+          <div class="card card--span2"><h3>Embudo de la página</h3><p class="sub">De visita a cliente (visitantes únicos)</p><div class="js-funnel"></div></div>
+          <div class="card"><h3>De dónde llegan</h3><p class="sub">Visitantes por fuente / campaña</p><div class="js-sources"></div></div>
+          <div class="card"><h3>Dispositivos</h3><p class="sub">Visitantes</p><div class="js-devices"></div></div>
+          <div class="card"><h3>Lo más clicado</h3><p class="sub">Botones y enlaces</p><div class="js-clicks"></div></div>
+          <div class="card"><h3>Hasta dónde bajan</h3><p class="sub">% de visitas que llegan a cada punto</p><div class="js-scroll"></div></div>
+          <div class="card"><h3>Secciones vistas</h3><p class="sub">Visitas que vieron cada sección</p><div class="js-sections"></div></div>
+          <div class="card"><h3>Hora del día</h3><p class="sub">Visitas por hora (Puerto Rico)</p><div class="js-hours"></div></div>
+          <div class="card"><h3>Videos reproducidos</h3><p class="sub">Veces que le dieron play</p><div class="js-videos"></div></div>
+          <div class="card"><h3>Pueblos de los clientes</h3><p class="sub">Clientes en el periodo</p><div class="js-pueblos"></div></div>
+          <div class="card card--span2">
+            <h3>Mapa de clics</h3><p class="sub">Dónde tocan en la página (arriba = inicio de la página)</p>
+            <div class="heat-wrap">
+              <div>
+                <div class="seg js-heat-dev" role="group" aria-label="Dispositivo" style="margin-bottom:10px">
+                  <button data-dev="celular" class="is-on">Celular</button>
+                  <button data-dev="computadora">Computadora</button>
+                </div>
+                <div class="heat js-heat"><canvas width="220" height="660"></canvas></div>
+              </div>
+              <div class="js-heat-legend"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ajustes -->
+      <section class="view" data-view="ajustes">
+        <div class="settings">
+          <div class="card">
+            <h3>Conexión</h3>
+            <p class="sub js-conn"></p>
+          </div>
+          <div class="card">
+            <h3>Este dispositivo</h3>
+            <label class="check" style="margin-top:8px"><input type="checkbox" class="js-notrack"> No contar mis visitas a la página en este navegador</label>
+            <label class="check" style="margin-top:8px"><select class="select js-theme" style="max-width:200px"><option value="">Tema automático</option><option value="light">Claro</option><option value="dark">Oscuro</option></select></label>
+          </div>
+          <div class="card js-local-tools">
+            <h3>Datos de prueba</h3>
+            <p class="sub">Solo en modo prueba (sin base de datos). Para ver cómo se ve el panel con datos.</p>
+            <div class="quick">
+              <button class="btn js-demo" type="button">Cargar datos de ejemplo</button>
+              <button class="btn btn--danger js-clear-local" type="button">Borrar datos de este navegador</button>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Exportar</h3>
+            <div class="quick" style="margin-top:8px">
+              <button class="btn js-export" type="button">⬇ Clientes (CSV)</button>
+              <button class="btn js-export-ev" type="button">⬇ Eventos del periodo (CSV)</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ===== Detalle del cliente ===== -->
+  <div class="scrim js-scrim" hidden></div>
+  <aside class="drawer js-drawer" hidden aria-modal="true" role="dialog" aria-labelledby="d-title">
+    <div class="drawer__head"><h3 id="d-title" class="js-d-title">Cliente</h3><button class="drawer__x js-d-close" aria-label="Cerrar">×</button></div>
+    <form class="drawer__body js-d-form" autocomplete="off">
+      <div class="quick js-d-quick"></div>
+      <div><span class="f" style="font-size:.78rem;font-weight:700;color:var(--ink-2)">Etapa</span><div class="stage-pick js-d-stage" style="margin-top:6px"></div></div>
+      <div class="row2">
+        <label class="f">Nombre<input class="input" name="nombre" required></label>
+        <label class="f">Teléfono<input class="input" name="telefono" inputmode="tel"></label>
+      </div>
+      <div class="row2">
+        <label class="f">Email<input class="input" name="email" type="email"></label>
+        <label class="f">Pueblo<input class="input" name="pueblo" list="pueblos-list"></label>
+      </div>
+      <div class="row2">
+        <label class="f">Interés
+          <select class="select" name="interes"><option value=""></option><option>Placas solares + batería</option><option>Solo placas solares</option><option>Solo batería</option><option>Quiero que me orienten</option></select>
+        </label>
+        <label class="f">Factura de luz<select class="select" name="factura"><option value=""></option><option>Menos de $100</option><option>$100 a $200</option><option>$200 a $300</option><option>Más de $300</option></select></label>
+      </div>
+      <div class="row2">
+        <label class="f">Dueño(a) de casa
+          <select class="select" name="dueno"><option value=""></option><option>Sí</option><option>No</option></select>
+        </label>
+        <label class="f">Valor estimado ($)<input class="input" name="valor" inputmode="decimal" placeholder="0"></label>
+      </div>
+      <label class="f">Próximo seguimiento<input class="input" name="proximo" type="date"></label>
+      <label class="f">Notas<textarea class="textarea" name="notas" rows="4"></textarea></label>
+      <div>
+        <span style="font-size:.78rem;font-weight:700;color:var(--ink-2)">Historial</span>
+        <div class="quick" style="margin:6px 0 10px"><input class="input js-d-note" placeholder="Añadir actividad (ej. Llamé, no contestó)" style="flex:1"><button class="btn btn--sm js-d-addnote" type="button">Añadir</button></div>
+        <ul class="hist js-d-hist"></ul>
+      </div>
+      <p class="sub js-d-meta" style="margin:0;font-size:.75rem;color:var(--muted)"></p>
+    </form>
+    <div class="drawer__foot">
+      <button class="btn btn--primary js-d-save" type="button">Guardar</button>
+      <button class="btn btn--danger js-d-del" type="button">Eliminar</button>
+      <span class="saving js-d-saving"></span>
+    </div>
+  </aside>
+  <datalist id="pueblos-list"></datalist>
+
+  <div class="tip js-tip" hidden></div>
+  <div class="toast js-toast" hidden></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

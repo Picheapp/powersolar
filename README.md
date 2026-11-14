@@ -11,6 +11,10 @@ index.html          Página principal
 privacidad.html     Aviso de privacidad (enlazado desde el formulario)
 css/styles.css      Diseño
 js/main.js          Formulario, cuenta regresiva, calculadora  ← aquí está la CONFIGURACIÓN
+js/config.js        URL de la base de datos del CRM (Google Sheets)
+js/track.js         Medición de visitas, clics, scroll y secciones
+admin.html          Panel admin (CRM Kanban + estadísticas) — js/admin.js, css/admin.css
+backend/            Código para Google Apps Script (base de datos gratis)
 img/                Logo, fotos, favicon, imagen para compartir
 video/              Comercial y video del Powerwall 3
 ```
@@ -71,6 +75,46 @@ El formulario pregunta si es dueño de la casa, cuánto paga de luz, qué le int
 - **Google Analytics / Ads:** pega la etiqueta `gtag.js` antes de `</head>`. Se envía `generate_lead`.
 - Usa enlaces con UTM en tus anuncios (ej. `?utm_source=facebook&utm_campaign=noviembre`):
   el formulario guarda de qué campaña vino cada cliente.
+
+## 5. Panel admin (CRM de clientes + estadísticas)
+
+**Acceso escondido:** en el pie de la página, el puntito **·** justo después de “© 2026 Power Solar”
+abre `admin.html` (también puedes entrar directo a `tu-dominio.com/admin.html`). No sale en Google.
+
+Qué tiene:
+- **Resumen:** visitas, clientes nuevos, clics a WhatsApp y llamadas, tiempo en página, dinero en proceso y ganado,
+  seguimientos vencidos / para hoy.
+- **Ventas (Kanban):** columnas *Nuevo → Contactado → Cita/Visita → Propuesta → Ganado / Perdido*.
+  Arrastra las tarjetas (en celular: mantén presionado y arrastra, o abre la tarjeta y toca la etapa).
+  Cada cliente tiene botones de llamar y WhatsApp, valor estimado, fecha de seguimiento, notas e historial.
+- **Clientes:** tabla con búsqueda, orden por columna y **exportar a CSV** (Excel).
+- **Estadísticas:** embudo de la página (visita → bajó a la mitad → empezó formulario → paso 2 → envió),
+  de dónde llegan (Facebook, Google, WhatsApp, UTM), dispositivos, lo más clicado, hasta dónde bajan (scroll),
+  secciones vistas, hora del día, videos reproducidos, pueblos y **mapa de clics**.
+
+### Conectar la base de datos gratis (Google Sheets) — 5 minutos
+
+Sin esto el panel funciona en **modo prueba** (solo ve lo que pasa en tu propio navegador; en
+*Ajustes* puedes cargar datos de ejemplo para verlo lleno).
+
+1. Crea una hoja nueva en https://sheets.new (ej. “Power Solar CRM”).
+2. Menú **Extensiones → Apps Script**. Borra todo y pega el contenido de `backend/google-apps-script.gs`. Guarda.
+3. **Configuración del proyecto** (engranaje) → **Propiedades de la secuencia de comandos** → *Agregar*:
+   nombre `ADMIN_KEY`, valor = tu clave secreta (larga). Esa es la clave para entrar al panel.
+4. **Implementar → Nueva implementación** → tipo **Aplicación web** →
+   *Ejecutar como:* **Yo** · *Quién tiene acceso:* **Cualquier persona** → **Implementar** → autoriza.
+5. Copia la URL que termina en `/exec` y pégala en `js/config.js`:
+   ```js
+   window.PS_CONFIG = { crmEndpoint: "https://script.google.com/macros/s/XXXX/exec" };
+   ```
+6. Sube el cambio. Listo: cada visita y cada cliente del formulario se guarda en las pestañas
+   **Leads** y **Eventos** de tu hoja, y el panel los muestra.
+
+Notas:
+- La clave nunca está en el sitio; se valida en Google. Si cambias el código del script, usa
+  **Implementar → Administrar implementaciones → Editar → Nueva versión** para que la URL siga igual.
+- Al entrar al panel, ese navegador deja de contarse como visita (se puede cambiar en *Ajustes*).
+- El rastreo no guarda nombres ni datos personales de los visitantes: solo un número al azar por visitante.
 
 ## Después del 30 de noviembre
 

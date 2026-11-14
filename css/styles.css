@@ -341,3 +341,7 @@ input[type=range]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 
 /* ===== Videos debajo del formulario ===== */
 .video-top { padding: 2.5rem 0 1rem; background: #fff; }
 .video-top .videos { margin-bottom: 0; }
+
+/* Acceso escondido al panel admin (punto después del ©) */
+.footer__admin { display: inline-block; margin-left: .35em; padding: 0 .3em; color: inherit; opacity: .35; text-decoration: none; }
+.footer__admin:hover, .footer__admin:focus-visible { opacity: 1; }

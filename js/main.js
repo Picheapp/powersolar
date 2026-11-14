@@ -194,6 +194,8 @@ const PUEBLOS = ["Adjuntas","Aguada","Aguadilla","Aguas Buenas","Aibonito","Aña
     const btn = $(".js-submit", form);
     btn.disabled = true; btn.textContent = "Enviando…";
     track("Lead");
+    // Guardar el cliente en el CRM (panel admin)
+    if (window.PSTrack) window.PSTrack.lead(Object.assign({}, data, { notas: hasFile ? "Subió foto de factura (ver email)" : "" }));
 
     if (CONFIG.leadEmail) {
       // Envío por email sin salir de la página (FormSubmit AJAX), con la factura si la subieron
@@ -233,6 +235,7 @@ const PUEBLOS = ["Adjuntas","Aguada","Aguadilla","Aguas Buenas","Aibonito","Aña
   /* ----- Medición (Meta Pixel / Google) si los instalas ----- */
   function track(name) {
     try {
+      if (window.PSTrack && name !== "Lead") window.PSTrack.event(name === "FormStep2" ? "form_paso2" : name, { etiqueta: name });
       if (window.fbq) window.fbq("track", name === "Lead" ? "Lead" : "CustomizeProduct");
       if (window.gtag) window.gtag("event", name === "Lead" ? "generate_lead" : name);
     } catch (_) {}
