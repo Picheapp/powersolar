@@ -29,9 +29,9 @@
         <div class="login__err js-login-err" role="alert"></div>
       </form>
       <div class="login__note js-local-note" hidden>
-        <b>Modo prueba:</b> todavía no hay base de datos conectada (<code>js/config.js</code>).
-        Verás solo las visitas y clientes de este navegador. Escribe cualquier clave para entrar
-        y sigue el README → “Panel admin” para conectar Google Sheets gratis.
+        <b>Falta conectar la base de datos.</b> El panel se activa cuando se pegue la URL de
+        Google Apps Script en <code>js/config.js</code> (README → “Panel admin”, 5 minutos).
+        Mientras tanto, los clientes siguen llegando por email y WhatsApp como siempre.
       </div>
     </div>
   </section>
@@ -142,14 +142,6 @@
             <h3>Este dispositivo</h3>
             <label class="check" style="margin-top:8px"><input type="checkbox" class="js-notrack"> No contar mis visitas a la página en este navegador</label>
             <label class="check" style="margin-top:8px"><select class="select js-theme" style="max-width:200px"><option value="">Tema automático</option><option value="light">Claro</option><option value="dark">Oscuro</option></select></label>
-          </div>
-          <div class="card js-local-tools">
-            <h3>Datos de prueba</h3>
-            <p class="sub">Solo en modo prueba (sin base de datos). Para ver cómo se ve el panel con datos.</p>
-            <div class="quick">
-              <button class="btn js-demo" type="button">Cargar datos de ejemplo</button>
-              <button class="btn btn--danger js-clear-local" type="button">Borrar datos de este navegador</button>
-            </div>
           </div>
           <div class="card">
             <h3>Exportar</h3>

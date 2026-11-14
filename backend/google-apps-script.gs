@@ -97,7 +97,7 @@ function newLead_(l, admin) {
   var lead = {
     id: id, creado: now, actualizado: now, etapa: admin && l.etapa ? l.etapa : 'nuevo',
     fuente: admin ? (l.fuente || 'manual') : (l.fuente || 'web'),
-    historial: JSON.stringify([{ t: now, a: admin ? 'Creado manualmente' : 'Llegó por la web' }])
+    historial: admin && l.historial ? clip_(l.historial, 20000) : JSON.stringify([{ t: now, a: 'Llegó por la web' }])
   };
   ['nombre', 'telefono', 'email', 'pueblo', 'dueno', 'factura', 'interes', 'valor', 'proximo', 'notas', 'campana', 'visitante']
     .forEach(function (k) { lead[k] = clip_(l[k], k === 'notas' ? 5000 : 300); });

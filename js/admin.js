@@ -8,7 +8,6 @@
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const EP = (window.PS_CONFIG || {}).crmEndpoint || "";
-  const LOCAL = !EP;
   const TZ = "America/Puerto_Rico";
 
   const STAGES = [
@@ -66,38 +65,23 @@
   let KEY = ss.get("ps_admin_key") || ls.raw("ps_admin_key") || "";
   const api = {
     async load(days) {
-      if (LOCAL) {
-        const since = Date.now() - days * 864e5;
-        const events = ls.get("ps_local_events", []).filter((e) => new Date(e.ts).getTime() >= since);
-        return { ok: true, leads: ls.get("ps_local_leads", []), events };
-      }
       const r = await fetch(`${EP}?action=data&days=${days}&key=${encodeURIComponent(KEY)}`, { cache: "no-store" });
       return r.json();
     },
     async post(payload) {
-      if (LOCAL) return localWrite(payload);
       const r = await fetch(EP, { method: "POST", body: JSON.stringify(Object.assign({ key: KEY }, payload)), headers: { "Content-Type": "text/plain;charset=utf-8" } });
       return r.json();
     },
   };
-  function localWrite(p) {
-    const leads = ls.get("ps_local_leads", []);
-    const now = new Date().toISOString();
-    if (p.action === "addLead") {
-      const lead = Object.assign({ id: "L" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), creado: now, actualizado: now, etapa: "nuevo", fuente: "manual" }, p.lead);
-      leads.push(lead); ls.set("ps_local_leads", leads); return { ok: true, lead };
-    }
-    const i = leads.findIndex((l) => l.id === p.id);
-    if (p.action === "updateLead" && i > -1) { Object.assign(leads[i], p.fields, { actualizado: now }); ls.set("ps_local_leads", leads); }
-    if (p.action === "deleteLead" && i > -1) { leads.splice(i, 1); ls.set("ps_local_leads", leads); }
-    return { ok: true };
-  }
-
   /* ---------- estado ---------- */
   const state = { leads: [], events: [], days: 30, view: "resumen", search: "", filterInt: "", sort: { k: "creado", dir: -1 }, heatDev: "celular", loadedAt: null };
 
   /* ---------- login ---------- */
-  if (LOCAL) { $(".js-local-note").hidden = false; }
+  if (!EP) {
+    // Falta conectar Google Sheets: no se puede entrar todavía
+    $(".js-local-note").hidden = false;
+    $$(".js-login-form input, .js-login-form button").forEach((el) => (el.disabled = true));
+  }
   $(".js-login-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const f = e.target; const err = $(".js-login-err");
@@ -105,7 +89,7 @@
     const btn = f.querySelector("button"); btn.disabled = true; btn.textContent = "Entrando…";
     const ok = await refresh(true).catch(() => false);
     btn.disabled = false; btn.textContent = "Entrar";
-    if (!ok) { err.textContent = LOCAL ? "No se pudo abrir." : "Clave incorrecta o no hay conexión con Google Sheets."; return; }
+    if (!ok) { err.textContent = "Clave incorrecta o no hay conexión con Google Sheets."; return; }
     ss.set("ps_admin_key", KEY);
     if (f.remember.checked) ls.rawSet("ps_admin_key", KEY); else ls.rawSet("ps_admin_key", null);
     if (ls.raw("ps_notrack") == null) ls.rawSet("ps_notrack", "1"); // no contar al dueño
@@ -116,12 +100,8 @@
   function enterApp() {
     $(".js-login").hidden = true; $(".js-app").hidden = false;
     const mode = $(".js-mode");
-    mode.textContent = LOCAL ? "Modo prueba" : "En vivo";
-    mode.classList.toggle("mode-pill--local", LOCAL);
-    $(".js-local-tools").hidden = !LOCAL;
-    $(".js-conn").innerHTML = LOCAL
-      ? "Sin base de datos. Las visitas y clientes se guardan solo en el navegador donde se abre la página. Para recibir los datos de todos los visitantes, conecta Google Sheets: README → <b>Panel admin</b>."
-      : `Conectado a Google Sheets. Endpoint: <code>${esc(EP.replace(/^(https:\/\/[^/]+\/macros\/s\/.{6}).*(.{6}\/exec)$/, "$1…$2"))}</code>`;
+    mode.textContent = "En vivo";
+    $(".js-conn").innerHTML = `Conectado a Google Sheets. Endpoint: <code>${esc(EP.replace(/^(https:\/\/[^/]+\/macros\/s\/.{6}).*(.{6}\/exec)$/, "$1…$2"))}</code>`;
     $(".js-notrack").checked = ls.raw("ps_notrack") === "1";
     $(".js-theme").value = ls.get("ps_admin_theme", "");
     const saved = ss.get("ps_admin_view"); if (saved) go(saved);
@@ -455,8 +435,6 @@
         const r = await api.post({ action: "addLead", lead: fields });
         if (!r.ok) throw new Error(r.error);
         state.leads.push(Object.assign({}, r.lead, fields, { id: r.lead.id }));
-        // en el servidor el historial se crea solo; guardamos el nuestro (con actividad añadida)
-        if (!LOCAL) api.post({ action: "updateLead", id: r.lead.id, fields: { historial: fields.historial, etapa: fields.etapa } });
       }
       closeDrawer(); render(); toast("Guardado");
     } catch (e) { $(".js-d-saving").textContent = "No se pudo guardar"; console.warn(e); }
@@ -675,77 +653,6 @@
   $(".js-export-ev").addEventListener("click", () => download(`eventos-power-solar-${todayKey()}.csv`,
     csv(state.events, ["ts", "tipo", "visitante", "sesion", "pagina", "fuente", "dispositivo", "etiqueta", "x", "y", "valor", "ref"])));
 
-  /* ---------- Datos de ejemplo (modo prueba) ---------- */
-  $(".js-demo").addEventListener("click", () => {
-    if (!LOCAL) return;
-    const { leads, events } = demoData();
-    ls.set("ps_local_leads", leads.concat(ls.get("ps_local_leads", [])));
-    ls.set("ps_local_events", ls.get("ps_local_events", []).concat(events).slice(-20000));
-    refresh().then(() => toast("Datos de ejemplo cargados"));
-  });
-  $(".js-clear-local").addEventListener("click", () => {
-    if (!confirm("¿Borrar todos los datos guardados en este navegador?")) return;
-    ls.del("ps_local_leads"); ls.del("ps_local_events"); refresh().then(() => toast("Datos borrados"));
-  });
-  function demoData() {
-    const R = (a) => a[Math.floor(Math.random() * a.length)];
-    const names = ["María Rivera", "José Santiago", "Carmen Ortiz", "Luis Colón", "Ana Torres", "Pedro Vázquez", "Rosa Díaz", "Miguel Cruz", "Sonia Rodríguez", "Carlos Pérez", "Wanda Morales", "Ángel Rosario", "Nilda Ramos", "Héctor Medina", "Yolanda Ríos", "Edgardo Nieves", "Lourdes Reyes", "Javier Burgos"];
-    const pueblos = ["Bayamón", "Caguas", "Ponce", "Carolina", "San Juan", "Arecibo", "Mayagüez", "Guaynabo", "Toa Baja", "Humacao", "Cidra", "Juncos"];
-    const srcs = ["facebook / noviembre", "facebook / noviembre", "facebook / noviembre", "directo", "google", "whatsapp", "instagram / noviembre"];
-    const clicks = [["Quiero la oferta", 8, 3], ["WhatsApp → https://wa.me/17875252996", 50, 96, "whatsapp"], ["Llamar", 20, 96, "llamada"], ["Continuar", 50, 12], ["Enviar mis datos", 50, 15], ["(787) 525-2996", 80, 1, "llamada"], ["Play video", 50, 22], ["¿Cuánto cuesta?", 50, 82], ["Calculadora", 50, 40], ["Oferta", 45, 1]];
-    const sections = ["hero", "video-top", "oferta", "ahorro", "video-sec", "bill", "equipos", "how", "checklist", "advisor", "preguntas", "final", "footer"];
-    const events = []; const leads = [];
-    const stages = ["nuevo", "nuevo", "contactado", "contactado", "cita", "propuesta", "ganado", "perdido"];
-    for (let d = 29; d >= 0; d--) {
-      const visits = Math.round(25 + Math.random() * 30 + (29 - d) * 1.4);
-      for (let v = 0; v < visits; v++) {
-        const t0 = Date.now() - d * 864e5 - Math.random() * 864e5 * (d === 0 ? 0.5 : 1);
-        const hourBias = new Date(t0); hourBias.setHours(R([7, 8, 12, 13, 18, 19, 20, 21, 21, 20, 19, 10, 15, 22]), Math.random() * 60);
-        let t = Math.min(Date.now() - 6e4, hourBias.getTime());
-        const vid = Math.random().toString(36).slice(2, 10), sid = Math.random().toString(36).slice(2, 10);
-        const dev = Math.random() < 0.78 ? "celular" : Math.random() < 0.9 ? "computadora" : "tablet";
-        const base = { visitante: vid, sesion: sid, pagina: "index.html", ref: "", fuente: R(srcs), dispositivo: dev };
-        const ev = (tipo, x = {}) => events.push(Object.assign({ ts: new Date((t += 4000 + Math.random() * 20000)).toISOString(), tipo }, base, x));
-        ev("pageview", { etiqueta: "Power Solar" });
-        const depth = Math.random();
-        const nSec = Math.max(1, Math.round(depth * sections.length));
-        sections.slice(0, nSec).forEach((s) => ev("seccion", { etiqueta: s }));
-        [25, 50, 75, 100].forEach((p) => { if (depth * 100 + 10 >= p) ev("scroll", { valor: p, etiqueta: p + "%" }); });
-        const nClicks = depth < 0.15 ? 0 : Math.floor(Math.random() * 4);
-        for (let c = 0; c < nClicks; c++) {
-          const [lab, x, y, tipo] = R(clicks);
-          ev(tipo || "click", { etiqueta: lab, x: Math.max(1, Math.min(99, x + (Math.random() - 0.5) * 30)).toFixed(1), y: Math.max(0.5, Math.min(99.5, y + (Math.random() - 0.5) * 6)).toFixed(1) });
-        }
-        if (Math.random() < 0.3) ev("video", { etiqueta: R(["comercial-power-solar.mp4", "promo-v11.mp4", "oferta-43.mp4", "powerwall-3.mp4"]) });
-        if (Math.random() < 0.22) {
-          ev("form_inicio", { etiqueta: "Empezó el formulario" });
-          if (Math.random() < 0.6) {
-            ev("form_paso2", { etiqueta: "FormStep2" });
-            if (Math.random() < 0.55) {
-              ev("lead", { etiqueta: "Formulario" });
-              const st = d > 20 ? R(stages.slice(2)) : d > 7 ? R(stages) : R(stages.slice(0, 4));
-              const created = new Date(t).toISOString();
-              const nm = R(names);
-              const hist = [{ t: created, a: "Llegó por la web" }];
-              if (st !== "nuevo") hist.unshift({ t: new Date(t + 864e5 * 0.5).toISOString(), a: "Movido a " + stageName(st) });
-              leads.push({
-                id: "D" + Math.random().toString(36).slice(2, 10), creado: created, actualizado: created, nombre: nm,
-                telefono: `(787) ${Math.floor(200 + Math.random() * 799)}-${String(Math.floor(Math.random() * 9999)).padStart(4, "0")}`,
-                email: "", pueblo: R(pueblos), dueno: Math.random() < 0.9 ? "Sí" : "No", factura: R(["Menos de $100", "$100 a $200", "$100 a $200", "$200 a $300", "Más de $300"]),
-                interes: R(["Placas solares + batería", "Placas solares + batería", "Solo placas solares", "Quiero que me orienten"]),
-                etapa: st, valor: ["propuesta", "ganado", "cita"].includes(st) ? String(Math.round(18 + Math.random() * 22) * 1000) : "",
-                proximo: ["contactado", "cita", "propuesta"].includes(st) && Math.random() < 0.7 ? dayKey(Date.now() + (Math.round(Math.random() * 6) - 2) * 864e5) : "",
-                notas: "", fuente: "web", campana: base.fuente, visitante: vid, historial: JSON.stringify(hist),
-              });
-            }
-          }
-        }
-        ev("salida", { valor: Math.round(8 + depth * 220 + Math.random() * 40), etiqueta: `scroll ${Math.round(depth * 100)}%` });
-      }
-    }
-    return { leads, events };
-  }
-
   /* ---------- datalist de pueblos ---------- */
   ["Adjuntas","Aguada","Aguadilla","Aguas Buenas","Aibonito","Añasco","Arecibo","Arroyo","Barceloneta","Barranquitas","Bayamón","Cabo Rojo","Caguas","Camuy","Canóvanas","Carolina","Cataño","Cayey","Ceiba","Ciales","Cidra","Coamo","Comerío","Corozal","Culebra","Dorado","Fajardo","Florida","Guánica","Guayama","Guayanilla","Guaynabo","Gurabo","Hatillo","Hormigueros","Humacao","Isabela","Jayuya","Juana Díaz","Juncos","Lajas","Lares","Las Marías","Las Piedras","Loíza","Luquillo","Manatí","Maricao","Maunabo","Mayagüez","Moca","Morovis","Naguabo","Naranjito","Orocovis","Patillas","Peñuelas","Ponce","Quebradillas","Rincón","Río Grande","Sabana Grande","Salinas","San Germán","San Juan","San Lorenzo","San Sebastián","Santa Isabel","Toa Alta","Toa Baja","Trujillo Alto","Utuado","Vega Alta","Vega Baja","Vieques","Villalba","Yabucoa","Yauco"]
     .forEach((p) => $("#pueblos-list").appendChild(new Option(p)));
@@ -753,7 +660,7 @@
   let rT; addEventListener("resize", () => { clearTimeout(rT); rT = setTimeout(() => { if (state.view === "resumen" || state.view === "stats") render(); }, 200); });
 
   /* ---------- arranque: sesión guardada ---------- */
-  if (KEY || LOCAL && ss.get("ps_admin_key") != null) {
+  if (KEY && EP) {
     refresh(true).then((ok) => { if (ok) enterApp(); else { ss.del("ps_admin_key"); } });
   }
 })();

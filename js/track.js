@@ -7,8 +7,9 @@
 (() => {
   const CFG = window.PS_CONFIG || {};
   const EP = CFG.crmEndpoint || "";
-  const LOCAL_KEY = "ps_local_events";
-  if (/^\/?admin/.test(location.pathname.split("/").pop())) return; // no medir el panel
+  const NOOP = { event() {}, lead() { return Promise.resolve(); } };
+  // Sin base de datos conectada no se mide nada (no se guarda nada en el navegador del visitante)
+  if (!EP || /^\/?admin/.test(location.pathname.split("/").pop())) { window.PSTrack = NOOP; return; }
 
   const rid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   const store = (() => { try { return window.localStorage; } catch (_) { return null; } })();
@@ -16,7 +17,8 @@
   const get = (s, k) => { try { return s && s.getItem(k); } catch (_) { return null; } };
   const set = (s, k, v) => { try { s && s.setItem(k, v); } catch (_) {} };
 
-  if (get(store, "ps_notrack") === "1") { window.PSTrack = { event() {}, lead() { return Promise.resolve(); } }; return; }
+  // El dueño puede apagar la medición de sus propias visitas (los formularios sí se guardan)
+  const skip = get(store, "ps_notrack") === "1";
 
   let visitor = get(store, "ps_vid"); if (!visitor) { visitor = rid(); set(store, "ps_vid", visitor); }
   let session = get(sess, "ps_sid"); if (!session) { session = rid(); set(sess, "ps_sid", session); }
@@ -41,19 +43,13 @@
       ts: new Date().toISOString(), tipo, visitante: visitor, sesion: session, pagina,
       ref: document.referrer ? document.referrer.slice(0, 200) : "", fuente, dispositivo,
     }, extra);
+    if (skip) return;
     queue.push(ev);
-    if (!EP) {
-      try {
-        const arr = JSON.parse(get(store, LOCAL_KEY) || "[]"); arr.push(ev);
-        set(store, LOCAL_KEY, JSON.stringify(arr.slice(-3000)));
-      } catch (_) {}
-    }
     if (queue.length >= 15) flush();
   }
   function flush(beacon) {
     if (!queue.length) return;
     const batch = queue.splice(0, 50);
-    if (!EP) return;
     const body = JSON.stringify({ action: "track", events: batch });
     if (beacon && navigator.sendBeacon && navigator.sendBeacon(EP, new Blob([body], { type: "text/plain" }))) return;
     fetch(EP, { method: "POST", body, headers: { "Content-Type": "text/plain;charset=utf-8" }, keepalive: true, mode: "no-cors" }).catch(() => {});
@@ -132,16 +128,6 @@
       push("lead", { etiqueta: data.interes || "Formulario" });
       flush();
       const lead = Object.assign({}, data, { fuente: "web", campana: fuente, visitante: visitor });
-      if (!EP) {
-        try {
-          const arr = JSON.parse(get(store, "ps_local_leads") || "[]");
-          const now = new Date().toISOString();
-          arr.push(Object.assign({ id: "L" + rid(), creado: now, actualizado: now, etapa: "nuevo",
-            historial: JSON.stringify([{ t: now, a: "Llegó por la web" }]) }, lead));
-          set(store, "ps_local_leads", JSON.stringify(arr));
-        } catch (_) {}
-        return Promise.resolve();
-      }
       return fetch(EP, { method: "POST", body: JSON.stringify({ action: "lead", lead }),
         headers: { "Content-Type": "text/plain;charset=utf-8" }, keepalive: true, mode: "no-cors" }).catch(() => {});
     },

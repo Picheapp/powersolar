@@ -94,8 +94,8 @@ Qué tiene:
 
 ### Conectar la base de datos gratis (Google Sheets) — 5 minutos
 
-Sin esto el panel funciona en **modo prueba** (solo ve lo que pasa en tu propio navegador; en
-*Ajustes* puedes cargar datos de ejemplo para verlo lleno).
+Hasta que lo conectes, el panel muestra “Falta conectar la base de datos” y la página no mide
+nada. Los clientes siguen llegando por email (FormSubmit) y WhatsApp como siempre.
 
 1. Crea una hoja nueva en https://sheets.new (ej. “Power Solar CRM”).
 2. Menú **Extensiones → Apps Script**. Borra todo y pega el contenido de `backend/google-apps-script.gs`. Guarda.

@@ -195,7 +195,7 @@ const PUEBLOS = ["Adjuntas","Aguada","Aguadilla","Aguas Buenas","Aibonito","Aña
     btn.disabled = true; btn.textContent = "Enviando…";
     track("Lead");
     // Guardar el cliente en el CRM (panel admin)
-    if (window.PSTrack) window.PSTrack.lead(Object.assign({}, data, { notas: hasFile ? "Subió foto de factura (ver email)" : "" }));
+    try { if (window.PSTrack) window.PSTrack.lead(Object.assign({}, data, { notas: hasFile ? "Subió foto de factura (ver email)" : "" })); } catch (_) {}
 
     if (CONFIG.leadEmail) {
       // Envío por email sin salir de la página (FormSubmit AJAX), con la factura si la subieron
