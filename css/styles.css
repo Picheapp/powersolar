@@ -337,3 +337,7 @@ input[type=range]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 
   .header__logo img { height: 40px; }
   .topbar { padding: .4rem 1rem; font-size: .8rem; }
 }
+
+/* ===== Videos debajo del formulario ===== */
+.video-top { padding: 2.5rem 0 1rem; background: #fff; }
+.video-top .videos { margin-bottom: 0; }
