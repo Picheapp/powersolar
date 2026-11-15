@@ -45,7 +45,7 @@
     }, extra);
     if (skip) return;
     queue.push(ev);
-    if (queue.length >= 15) flush();
+    if (queue.length >= 150) flush(); // un solo envío por visita (al salir de la página)
   }
   function flush(beacon) {
     if (!queue.length) return;
@@ -54,7 +54,6 @@
     if (beacon && navigator.sendBeacon && navigator.sendBeacon(EP, new Blob([body], { type: "text/plain" }))) return;
     fetch(EP, { method: "POST", body, headers: { "Content-Type": "text/plain;charset=utf-8" }, keepalive: true, mode: "no-cors" }).catch(() => {});
   }
-  setInterval(flush, 8000);
 
   /* Página vista */
   push("pageview", { etiqueta: document.title.slice(0, 120) });
@@ -126,7 +125,6 @@
     event: (tipo, extra) => push(tipo, extra || {}),
     lead(data) {
       push("lead", { etiqueta: data.interes || "Formulario" });
-      flush();
       const lead = Object.assign({}, data, { fuente: "web", campana: fuente, visitante: visitor });
       return fetch(EP, { method: "POST", body: JSON.stringify({ action: "lead", lead }),
         headers: { "Content-Type": "text/plain;charset=utf-8" }, keepalive: true, mode: "no-cors" }).catch(() => {});

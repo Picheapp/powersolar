@@ -1,6 +1,6 @@
 /* ============================================================
    Power Solar — Panel admin: CRM (Kanban), clientes y estadísticas.
-   Datos: Google Apps Script (js/config.js → crmEndpoint).
+   Datos: función de Vercel api/crm.js (js/config.js → crmEndpoint).
    Sin endpoint: modo prueba con los datos de este navegador.
    ============================================================ */
 (() => {
@@ -65,7 +65,7 @@
   let KEY = ss.get("ps_admin_key") || ls.raw("ps_admin_key") || "";
   const api = {
     async load(days) {
-      const r = await fetch(`${EP}?action=data&days=${days}&key=${encodeURIComponent(KEY)}`, { cache: "no-store" });
+      const r = await fetch(`${EP}?days=${days}`, { cache: "no-store", headers: { "x-admin-key": KEY } });
       return r.json();
     },
     async post(payload) {
@@ -78,7 +78,7 @@
 
   /* ---------- login ---------- */
   if (!EP) {
-    // Falta conectar Google Sheets: no se puede entrar todavía
+    // Sin base de datos configurada: no se puede entrar todavía
     $(".js-local-note").hidden = false;
     $$(".js-login-form input, .js-login-form button").forEach((el) => (el.disabled = true));
   }
@@ -89,7 +89,7 @@
     const btn = f.querySelector("button"); btn.disabled = true; btn.textContent = "Entrando…";
     const ok = await refresh(true).catch(() => false);
     btn.disabled = false; btn.textContent = "Entrar";
-    if (!ok) { err.textContent = "Clave incorrecta o no hay conexión con Google Sheets."; return; }
+    if (!ok) { err.textContent = "Clave incorrecta o no hay conexión con la base de datos."; return; }
     ss.set("ps_admin_key", KEY);
     if (f.remember.checked) ls.rawSet("ps_admin_key", KEY); else ls.rawSet("ps_admin_key", null);
     if (ls.raw("ps_notrack") == null) ls.rawSet("ps_notrack", "1"); // no contar al dueño
@@ -101,7 +101,7 @@
     $(".js-login").hidden = true; $(".js-app").hidden = false;
     const mode = $(".js-mode");
     mode.textContent = "En vivo";
-    $(".js-conn").innerHTML = `Conectado a Google Sheets. Endpoint: <code>${esc(EP.replace(/^(https:\/\/[^/]+\/macros\/s\/.{6}).*(.{6}\/exec)$/, "$1…$2"))}</code>`;
+    $(".js-conn").innerHTML = "Conectado a la base de datos privada de Vercel (Vercel Blob). La clave se cambia en Vercel → Settings → Environment Variables → <code>ADMIN_KEY</code>.";
     $(".js-notrack").checked = ls.raw("ps_notrack") === "1";
     $(".js-theme").value = ls.get("ps_admin_theme", "");
     const saved = ss.get("ps_admin_view"); if (saved) go(saved);

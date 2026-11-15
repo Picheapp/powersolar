@@ -11,10 +11,11 @@ index.html          Página principal
 privacidad.html     Aviso de privacidad (enlazado desde el formulario)
 css/styles.css      Diseño
 js/main.js          Formulario, cuenta regresiva, calculadora  ← aquí está la CONFIGURACIÓN
-js/config.js        URL de la base de datos del CRM (Google Sheets)
+js/config.js        Dirección de la base de datos del CRM (/api/crm)
 js/track.js         Medición de visitas, clics, scroll y secciones
 admin.html          Panel admin (CRM Kanban + estadísticas) — js/admin.js, css/admin.css
-backend/            Código para Google Apps Script (base de datos gratis)
+api/crm.js          Base de datos del CRM (función de Vercel + Vercel Blob privado)
+package.json        Dependencia de Vercel Blob
 img/                Logo, fotos, favicon, imagen para compartir
 video/              Comercial y video del Powerwall 3
 ```
@@ -92,29 +93,19 @@ Qué tiene:
   de dónde llegan (Facebook, Google, WhatsApp, UTM), dispositivos, lo más clicado, hasta dónde bajan (scroll),
   secciones vistas, hora del día, videos reproducidos, pueblos y **mapa de clics**.
 
-### Conectar la base de datos gratis (Google Sheets) — 5 minutos
+### Base de datos (Vercel)
 
-Hasta que lo conectes, el panel muestra “Falta conectar la base de datos” y la página no mide
-nada. Los clientes siguen llegando por email (FormSubmit) y WhatsApp como siempre.
+Todo vive en el mismo proyecto de Vercel, sin servicios extra:
 
-1. Crea una hoja nueva en https://sheets.new (ej. “Power Solar CRM”).
-2. Menú **Extensiones → Apps Script**. Borra todo y pega el contenido de `backend/google-apps-script.gs`. Guarda.
-3. **Configuración del proyecto** (engranaje) → **Propiedades de la secuencia de comandos** → *Agregar*:
-   nombre `ADMIN_KEY`, valor = tu clave secreta (larga). Esa es la clave para entrar al panel.
-4. **Implementar → Nueva implementación** → tipo **Aplicación web** →
-   *Ejecutar como:* **Yo** · *Quién tiene acceso:* **Cualquier persona** → **Implementar** → autoriza.
-5. Copia la URL que termina en `/exec` y pégala en `js/config.js`:
-   ```js
-   window.PS_CONFIG = { crmEndpoint: "https://script.google.com/macros/s/XXXX/exec" };
-   ```
-6. Sube el cambio. Listo: cada visita y cada cliente del formulario se guarda en las pestañas
-   **Leads** y **Eventos** de tu hoja, y el panel los muestra.
-
-Notas:
-- La clave nunca está en el sitio; se valida en Google. Si cambias el código del script, usa
-  **Implementar → Administrar implementaciones → Editar → Nueva versión** para que la URL siga igual.
-- Al entrar al panel, ese navegador deja de contarse como visita (se puede cambiar en *Ajustes*).
-- El rastreo no guarda nombres ni datos personales de los visitantes: solo un número al azar por visitante.
+- `api/crm.js` es la función que guarda visitas y clientes en **Vercel Blob privado**
+  (Vercel → Storage → `powersolar-crm`). Nadie puede leer los datos sin la clave.
+- **Clave del panel:** variable `ADMIN_KEY` en Vercel → Settings → Environment Variables.
+  Para cambiarla: edita el valor y vuelve a desplegar (Deployments → ⋯ → Redeploy).
+- `js/config.js` apunta a `/api/crm`. Si lo dejas vacío, la página deja de medir.
+- Para no gastar el límite gratis de Vercel, la página manda **un solo envío por visita**
+  (al salir) y el panel junta las visitas de cada día en un solo archivo.
+- Revisa el uso en Vercel → Usage → Blob. Si algún día pasa del límite gratis, los
+  formularios siguen llegando por email y WhatsApp.
 
 ## Después del 30 de noviembre
 
