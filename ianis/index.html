@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ianis Delimar Martell · Power Solar | Mitad del pago por 6 meses</title>
+  <meta name="description" content="Promoción de noviembre 2026: Power Solar te paga el 50% de la mensualidad de tu sistema solar con batería por 6 meses. Sistema Tesla Home completo. Habla con Ianis Delimar Martell: (787) 367-4582.">
+  <meta name="theme-color" content="#0B2A8F">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+
+  <!-- Vista previa al compartir (Facebook, WhatsApp, etc.). Cambia a la URL completa cuando tengas el dominio. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mitad del pago por 6 meses | Ianis · Power Solar">
+  <meta property="og:description" content="Te pagamos el 50% de la mensualidad de tu sistema solar con batería por 6 meses. Solo del 1 al 30 de noviembre de 2026.">
+  <meta property="og:image" content="img/og-ianis.jpg">
+  <meta property="og:locale" content="es_PR">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preload" as="image" href="img/hero-techo.webp">
+</head>
+<body>
+
+  <div class="topbar" role="note">
+    <span class="topbar__dot" aria-hidden="true"></span>
+    <span><strong>Promoción de noviembre:</strong> termina en <span class="js-countdown-inline">--</span></span>
+  </div>
+
+  <header class="header" id="inicio">
+    <div class="container header__inner">
+      <a href="#inicio" class="header__logo" aria-label="Power Solar, inicio">
+        <img src="img/logo.png" alt="Power Solar" width="150" height="72">
+      </a>
+      <nav class="header__nav" aria-label="Secciones">
+        <a href="#oferta">Oferta</a>
+        <a href="#ahorro">Ahorro</a>
+        <a href="#equipos">Equipos</a>
+        <a href="#preguntas">Preguntas</a>
+      </nav>
+      <div class="header__actions">
+        <a class="header__phone" href="tel:+17873674582">(787) 367-4582</a>
+        <a class="btn btn--orange btn--sm" href="#formulario">Quiero la oferta</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== HERO con formulario rápido ===== -->
+    <section class="hero">
+      <div class="hero__bg" aria-hidden="true"></div>
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <p class="eyebrow eyebrow--light">Solo del 1 al 30 de noviembre de 2026</p>
+          <h1 class="hero__title">Mitad del pago.<br><span>Por 6 meses.</span></h1>
+          <p class="hero__lead">Power Solar te paga el <strong>50% de la mensualidad</strong> de tu sistema solar con batería durante 6 meses.* Sistema <strong>Tesla Home</strong> completo y tu kilovatio a <strong>18¢ fijo</strong>.</p>
+
+          <div class="countdown" aria-live="polite">
+            <p class="countdown__label">La promoción termina en</p>
+            <div class="countdown__boxes js-countdown">
+              <div><b data-u="d">--</b><span>días</span></div>
+              <div><b data-u="h">--</b><span>horas</span></div>
+              <div><b data-u="m">--</b><span>min</span></div>
+              <div><b data-u="s">--</b><span>seg</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__form" id="formulario">
+          <form class="lead-form lead-form--quick js-lead-form" novalidate>
+            <div class="lead-form__head">
+              <p class="lead-form__badge">Aparta tu promoción</p>
+              <h2>Habla con Ianis hoy</h2>
+              <p class="lead-form__sub">30 segundos. Te contacto por llamada o WhatsApp.</p>
+            </div>
+
+            <div class="lead-form__step is-active">
+              <label class="field">
+                <span>Nombre</span>
+                <input type="text" name="nombre" autocomplete="name" placeholder="Ej. María Rivera" required>
+              </label>
+              <div class="grid2">
+                <label class="field">
+                  <span>Teléfono / WhatsApp</span>
+                  <input type="tel" name="telefono" autocomplete="tel" inputmode="tel" placeholder="(787) 000-0000" required>
+                </label>
+                <label class="field">
+                  <span>Pueblo</span>
+                  <select name="pueblo" required class="js-pueblos">
+                    <option value="">Selecciona</option>
+                  </select>
+                </label>
+              </div>
+
+              <p class="field__q">¿Cuánto pagas de luz al mes?</p>
+              <div class="chips chips--4" role="radiogroup">
+                <label class="chip"><input type="radio" name="factura" value="Menos de $100" required><span>&lt; $100</span></label>
+                <label class="chip"><input type="radio" name="factura" value="$100 a $200"><span>$100–200</span></label>
+                <label class="chip"><input type="radio" name="factura" value="$200 a $300"><span>$200–300</span></label>
+                <label class="chip"><input type="radio" name="factura" value="Más de $300"><span>$300+</span></label>
+              </div>
+
+              <label class="consent">
+                <input type="checkbox" name="consentimiento" value="Sí" checked required>
+                <span>Acepto que Power Solar me contacte por llamada, mensaje o WhatsApp sobre esta oferta. Ver <a href="privacidad.html" target="_blank" rel="noopener">privacidad</a>.</span>
+              </label>
+              <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <p class="lead-form__error js-err" role="alert"></p>
+              <button type="submit" class="btn btn--orange btn--block btn--lg js-submit">Quiero mi orientación</button>
+            </div>
+
+            <div class="lead-form__done" hidden>
+              <div class="done__icon" aria-hidden="true">✓</div>
+              <h3>¡Listo, <span class="js-done-name"></span>!</h3>
+              <p class="js-done-msg">Se abrió WhatsApp con tus datos. Toca <b>enviar</b> y te contesto en breve. Si no se abrió, toca aquí:</p>
+              <a class="btn btn--whatsapp btn--block js-wa-done" href="https://wa.me/17873674582" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+            </div>
+            <p class="lead-form__legal">*Aplica a contrato de sistemas solares con batería. Válido del 1 al 30 de noviembre de 2026. Ciertas restricciones aplican. No se puede combinar con otras ofertas.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Video de Ianis ===== -->
+    <section class="video-top">
+      <div class="container">
+        <figure class="video-card video-solo">
+          <div class="video-sec__player">
+            <video controls playsinline preload="none" poster="img/promo-ianis-poster.jpg">
+              <source src="video/promo-ianis.mp4" type="video/mp4">
+            </video>
+          </div>
+          <figcaption>Ianis te explica la promoción</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ===== LUMA vs Power Solar ===== -->
+    <section class="compare" id="oferta">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">La luz sigue subiendo</p>
+          <h2>Paga menos por cada kilovatio. <span class="hl">Y que no suba.</span></h2>
+        </div>
+        <div class="compare__grid">
+          <article class="rate rate--luma reveal">
+            <p class="rate__who">LUMA</p>
+            <p class="rate__num">34¢</p>
+            <p class="rate__unit">por kilovatio</p>
+            <p class="rate__tag rate__tag--up">↑ y sigue subiendo</p>
+          </article>
+          <div class="compare__vs" aria-hidden="true">vs</div>
+          <article class="rate rate--ps reveal">
+            <p class="rate__who">Power Solar</p>
+            <p class="rate__num">18¢</p>
+            <p class="rate__unit">por kilovatio</p>
+            <p class="rate__tag rate__tag--fixed">✓ Fijo por la duración del servicio</p>
+          </article>
+        </div>
+        <div class="news reveal">
+          <span class="news__label">En las noticias</span>
+          <p>El Negociado de Energía aprobó un aumento de unos <strong>$42</strong> en la factura de luz de un cliente residencial. <em>— Metro Puerto Rico, 30 de septiembre de 2026</em></p>
+        </div>
+        <p class="footnote">Tarifas por kilovatio según Power Solar. La tarifa de LUMA cambia con los ajustes del Negociado de Energía.</p>
+      </div>
+    </section>
+
+    <!-- ===== Calculadora ===== -->
+    <section class="calc" id="ahorro">
+      <div class="container calc__grid">
+        <div class="calc__copy reveal">
+          <p class="eyebrow eyebrow--light">Calcula tu promoción</p>
+          <h2>¿Cuánto pagarías los primeros 6 meses?</h2>
+          <p>Mueve la barra con la mensualidad estimada de tu sistema solar. Durante la promoción, Power Solar te paga la mitad.</p>
+          <a href="#formulario" class="btn btn--orange">Aparta mi promoción</a>
+        </div>
+        <div class="calc__card reveal">
+          <label class="calc__label" for="pago">Mensualidad de tu sistema solar</label>
+          <div class="calc__value">$<span class="js-pago-val">86</span><small>/mes</small></div>
+          <input type="range" id="pago" class="js-pago" min="50" max="400" step="1" value="86">
+          <div class="calc__results">
+            <div><span>Pagas por 6 meses</span><b>$<span class="js-mitad">43</span>/mes</b></div>
+            <div><span>Te ahorras en total</span><b class="green">$<span class="js-ahorro">258</span></b></div>
+          </div>
+          <p class="calc__note">Cálculo ilustrativo de la promoción (50% de la mensualidad por 6 meses). Tu mensualidad real depende del sistema que necesites.*</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Equipos: Sistema Tesla Home ===== -->
+    <section class="gear" id="equipos">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Sistema Tesla Home completo</p>
+          <h2>Nueva placa Tesla 420&nbsp;W + <span class="hl">Powerwall 3</span></h2>
+          <p class="section-sub">Placa → inversor → Powerwall 3. Power Solar es la única compañía que te ofrece el sistema Tesla Home en Puerto Rico.</p>
+        </div>
+        <div class="gear__grid">
+          <article class="gear__card reveal">
+            <div class="gear__media"><img src="img/placa-tesla-420.webp" alt="Nueva placa solar Tesla TSP-420 de 420 W" loading="lazy" width="1267" height="1600"></div>
+            <div class="gear__body">
+              <h3>Placa solar Tesla TSP-420</h3>
+              <ul class="specs">
+                <li><b>420 W</b><span>Por placa</span></li>
+                <li><b>18 zonas</b><span>De potencia</span></li>
+                <li><b>ADN Tesla</b><span>Diseño estilizado</span></li>
+                <li><b>25 años</b><span>De garantía</span></li>
+              </ul>
+              <p>18 zonas de potencia: 3 veces más que otras placas.</p>
+            </div>
+          </article>
+          <article class="gear__card reveal">
+            <div class="gear__media gear__media--video">
+              <video autoplay muted loop playsinline preload="metadata" poster="img/powerwall-3-poster.webp" width="560" height="700" aria-label="Batería Tesla Powerwall 3 girando">
+                <source src="video/powerwall-3.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="gear__body">
+              <h3>Batería Tesla Powerwall 3</h3>
+              <ul class="specs">
+                <li><b>13.5 kWh</b><span>Almacenamiento</span></li>
+                <li><b>11.5 kW</b><span>Potencia continua</span></li>
+                <li><b>Inversor</b><span>Solar integrado</span></li>
+                <li><b>App</b><span>Control por Wi-Fi</span></li>
+              </ul>
+              <p>Respaldo automático cuando se va la luz: tu casa sigue funcionando.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Factura bajo control ===== -->
+    <section class="bill">
+      <div class="container bill__grid">
+        <div class="bill__copy reveal">
+          <p class="eyebrow">¿Tu factura se ve así?</p>
+          <h2>Pon tu factura de luz <span class="hl">bajo control</span></h2>
+          <p>Cuando la factura de LUMA sube, sube sin avisar. Con placas solares la energía la produce el sol en tu techo, y con Power Solar tu kilovatio se queda en 18¢ fijo.</p>
+          <div class="bill__imgs">
+            <img src="img/factura-luma-muestra.webp" alt="Factura de luz de muestra de LUMA" loading="lazy" width="900" height="1164">
+          </div>
+          <p class="footnote footnote--left">Factura de muestra con fines ilustrativos.</p>
+        </div>
+        <div class="bill__ad reveal">
+          <img src="img/factura-bajo-control.webp" alt="Tu factura de luz bajo control con Power Solar, pagos accesibles desde $86" loading="lazy" width="985" height="1597">
+          <a href="#formulario" class="btn btn--orange btn--block">Recibe tu orientación con Ianis</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Cómo funciona ===== -->
+    <section class="how">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Fácil y rápido</p>
+          <h2>Así empiezas hoy</h2>
+        </div>
+        <ol class="how__steps">
+          <li class="reveal"><span class="how__n">1</span><h3>Déjame tus datos</h3><p>Llena el formulario o escríbeme por WhatsApp.</p></li>
+          <li class="reveal"><span class="how__n">2</span><h3>Recibe tu orientación</h3><p>Reviso tu factura de luz y te explico el sistema ideal para tu casa.</p></li>
+          <li class="reveal"><span class="how__n">3</span><h3>Instalación</h3><p>Instalamos tu sistema Tesla Home: placas, inversor y Powerwall 3.</p></li>
+          <li class="reveal"><span class="how__n">4</span><h3>Paga la mitad</h3><p>Disfruta 6 meses pagando la mitad de tu mensualidad.*</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===== Asesora ===== -->
+    <section class="advisor">
+      <div class="container advisor__grid">
+        <div class="advisor__img reveal">
+          <img src="img/ianis-asesora-sm.webp" srcset="img/ianis-asesora-sm.webp 470w, img/ianis-asesora.webp 941w" sizes="(min-width: 900px) 420px, 90vw" alt="Ianis Delimar Martell, consultora solar de Power Solar, frente a baterías Tesla Powerwall" loading="lazy" width="941" height="1672">
+        </div>
+        <div class="advisor__copy reveal">
+          <p class="eyebrow">Tu consultora solar</p>
+          <h2>Habla directo con Ianis Delimar Martell</h2>
+          <p>Te oriento paso a paso, contesto tus dudas y te ayudo a aprovechar la promoción antes de que termine.</p>
+          <ul class="benefits">
+            <li><span class="ico" aria-hidden="true">⚡</span><div><b>Precio fijo</b><span>18¢ por kilovatio por la duración del servicio.</span></div></li>
+            <li><span class="ico" aria-hidden="true">🔋</span><div><b>Luz cuando se va la luz</b><span>Respaldo automático con Powerwall 3.</span></div></li>
+            <li><span class="ico" aria-hidden="true">📱</span><div><b>Control desde tu celular</b><span>Mira tu producción y tu batería en la app.</span></div></li>
+          </ul>
+          <div class="advisor__ctas">
+            <a class="btn btn--orange" href="tel:+17873674582">Llamar (787) 367-4582</a>
+            <a class="btn btn--whatsapp" href="https://wa.me/17873674582?text=Hola%20Ianis%2C%20quiero%20informaci%C3%B3n%20de%20la%20promoci%C3%B3n%20de%20Power%20Solar." target="_blank" rel="noopener">WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Preguntas ===== -->
+    <section class="faq" id="preguntas">
+      <div class="container container--narrow">
+        <div class="section-head reveal">
+          <p class="eyebrow">Preguntas frecuentes</p>
+          <h2>Lo que más me preguntan</h2>
+        </div>
+        <details class="reveal" open>
+          <summary>¿En qué consiste la promoción?</summary>
+          <p>Power Solar te paga el 50% de la mensualidad de tu sistema solar por 6 meses. Por ejemplo, si tu mensualidad es $86, durante esos 6 meses pagarías $43.</p>
+        </details>
+        <details class="reveal">
+          <summary>¿Quién cualifica?</summary>
+          <p>Aplica a contratos de sistemas solares con batería firmados del 1 al 30 de noviembre de 2026. Ciertas restricciones aplican y no se puede combinar con otras ofertas. Te confirmo si cualificas.</p>
+        </details>
+        <details class="reveal">
+          <summary>¿Qué es el sistema Tesla Home?</summary>
+          <p>Es el sistema completo de Tesla: la nueva placa solar TSP-420, el inversor y la batería Powerwall 3. Power Solar es la única compañía que lo ofrece en Puerto Rico.</p>
+        </details>
+        <details class="reveal">
+          <summary>¿El precio del kilovatio sube?</summary>
+          <p>No. Con Power Solar el kilovatio está a 18 centavos, fijo por la duración de nuestros servicios.</p>
+        </details>
+        <details class="reveal">
+          <summary>¿Qué pasa cuando se va la luz?</summary>
+          <p>La batería Tesla Powerwall 3 guarda la energía de tus placas y le da respaldo a tu casa automáticamente cuando hay un apagón.</p>
+        </details>
+        <details class="reveal">
+          <summary>¿Cómo empiezo?</summary>
+          <p>Llena el formulario de esta página o escríbeme por WhatsApp al (787) 367-4582. Te oriento y te explico los próximos pasos.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ===== CTA final ===== -->
+    <section class="final">
+      <div class="container final__inner reveal">
+        <h2>Este es el momento.<br><span>La promoción termina el 30 de noviembre.</span></h2>
+        <div class="countdown countdown--center">
+          <div class="countdown__boxes js-countdown">
+            <div><b data-u="d">--</b><span>días</span></div>
+            <div><b data-u="h">--</b><span>horas</span></div>
+            <div><b data-u="m">--</b><span>min</span></div>
+            <div><b data-u="s">--</b><span>seg</span></div>
+          </div>
+        </div>
+        <div class="final__ctas">
+          <a href="#formulario" class="btn btn--orange btn--lg">Quiero mi orientación</a>
+          <a href="https://wa.me/17873674582?text=Hola%20Ianis%2C%20quiero%20aprovechar%20la%20promoci%C3%B3n%20de%20la%20mitad%20del%20pago." class="btn btn--whatsapp btn--lg" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div>
+        <img src="img/logo-blanco.png" alt="Power Solar" width="150" height="72" loading="lazy">
+        <p>Energía solar y baterías en Puerto Rico.</p>
+      </div>
+      <div>
+        <p class="footer__h">Contacto</p>
+        <p>Ianis Delimar Martell · Consultora Solar</p>
+        <p><a href="tel:+17873674582">(787) 367-4582</a></p>
+        <p><a href="https://wa.me/17873674582" target="_blank" rel="noopener">WhatsApp</a></p>
+      </div>
+      <div class="footer__legal">
+        <p>*Aplica a contrato de sistemas solares con batería. Válido del 1 al 30 de noviembre de 2026. Ciertas restricciones aplican. No se puede combinar con otras ofertas. Tarifas por kilovatio según Power Solar.</p>
+        <p>Tesla y Powerwall son marcas de Tesla, Inc. <a href="privacidad.html">Privacidad</a></p>
+        <p>© <span class="js-year">2026</span> Power Solar</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="mobilebar">
+    <a href="tel:+17873674582" class="mobilebar__btn">Llamar</a>
+    <a href="https://wa.me/17873674582" class="mobilebar__btn mobilebar__btn--wa" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="#formulario" class="mobilebar__btn mobilebar__btn--cta">Quiero la oferta</a>
+  </div>
+
+  <a class="wa-float" href="https://wa.me/17873674582" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp">
+    <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path fill="#fff" d="M16 3C9 3 3.3 8.6 3.3 15.6c0 2.4.7 4.7 1.9 6.7L3 29l6.9-2.2c1.9 1 4 1.6 6.1 1.6 7 0 12.7-5.6 12.7-12.6S23 3 16 3zm0 23c-2 0-3.9-.6-5.5-1.6l-.4-.2-4.1 1.3 1.3-4-.3-.4c-1.1-1.7-1.7-3.6-1.7-5.6C5.3 9.8 10.1 5.1 16 5.1s10.7 4.7 10.7 10.5S21.9 26 16 26zm5.9-7.8c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.8.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.2 1.1-1.2 2.8 1.2 3.2 1.4 3.5 2.4 3.6 5.8 5c2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5s.3-1.4.2-1.5-.3-.2-.6-.3z"/></svg>
+  </a>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>
